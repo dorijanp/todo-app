@@ -1,0 +1,12 @@
+<button
+  *ngIf="items$ | async"
+  mat-raised-button
+  color="accent"
+  (click)="openDialog()"
+>
+  Add an item
+</button>
+
+<ng-container *ngFor="let item of items$ | async">
+  <app-todo-item [todoItem]="item"></app-todo-item>
+</ng-container>
