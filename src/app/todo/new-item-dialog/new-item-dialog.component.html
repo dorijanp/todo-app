@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>Add a todo item to your list!</h1>
+<div mat-dialog-content>
+	<form [formGroup]="newItemForm">
+		<mat-form-field>
+			<mat-label>Title:</mat-label>
+			<input
+				matInput
+				formControlName="title"
+				[(ngModel)]="data.title"
+			/>
+			<mat-error *ngIf="newItemForm.controls['title'].hasError('required')">Title is required</mat-error>
+		</mat-form-field>
+		<mat-form-field>
+			<mat-label>Description:</mat-label>
+			<input
+				matInput
+				formControlName="description"
+				[(ngModel)]="data.description"
+			/>
+			<mat-error *ngIf="newItemForm.controls['description'].hasError('required')">Description is required</mat-error>
+		</mat-form-field>
+	</form>
+</div>
+<div mat-dialog-actions>
+	<button
+		mat-button
+		(click)="onNoClick()"
+		>Cancel</button
+	>
+	<button
+		mat-button
+		[mat-dialog-close]="data"
+		[disabled]="!newItemForm.dirty || newItemForm.controls['title'].errors || newItemForm.controls['description'].errors"
+		>Ok</button
+	>
+</div>

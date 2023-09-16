@@ -1,12 +1,5 @@
 {
   "targets": {
-    "todo-app-5fe5f": {
-      "hosting": {
-        "todo-app": [
-          "todo-app-5fe5f"
-        ]
-      }
-    },
     "todo-app-de8a6": {
       "hosting": {
         "todo-app": [

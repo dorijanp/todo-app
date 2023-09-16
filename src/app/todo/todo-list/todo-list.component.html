@@ -1,12 +1,20 @@
-<button
-  *ngIf="items$ | async"
-  mat-raised-button
-  color="accent"
-  (click)="openDialog()"
+<app-todo-item
+	*ngFor="let item of todoList$ | async"
+	[item]="item"
+	(deleteItem)="deleteTodoItem($event)"
+	(closeItem)="finishTodoItem($event)"
 >
-  Add an item
-</button>
+</app-todo-item>
 
-<ng-container *ngFor="let item of items$ | async">
-  <app-todo-item [todoItem]="item"></app-todo-item>
-</ng-container>
+<h2 *ngIf="isEmpty$ | async">Your Todo List is Empty!</h2>
+<div class="button-wrapper">
+	<button
+		mat-fab
+		color="primary"
+		aria-label="Example icon button with a delete icon"
+		matTooltip="Add item"
+		(click)="openNewItemDialog()"
+	>
+		<mat-icon>add</mat-icon>
+	</button>
+</div>

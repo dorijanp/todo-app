@@ -1,0 +1,10 @@
+mat-card {
+	color: white;
+}
+:host {
+	width: 100%;
+}
+
+.deleteButton {
+	margin-left: auto;
+}

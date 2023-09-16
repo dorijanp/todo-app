@@ -1,0 +1,14 @@
+:host {
+	width: 60%;
+	margin: 5rem auto;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.button-wrapper {
+	position: fixed;
+	right: 5%;
+	bottom: 5%;
+}

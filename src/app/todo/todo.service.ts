@@ -1,32 +1,44 @@
 import { Injectable } from '@angular/core';
-import { user } from '@angular/fire/auth';
-import {
-  Firestore,
-  Query,
-  addDoc,
-  collection,
-  collectionData,
-  getDocs,
-} from '@angular/fire/firestore';
+import { DocumentReference, Firestore, addDoc, collection, collectionData, deleteDoc, doc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import { AuthService } from '../auth/auth.service';
+import { TodoItem } from './todo-item';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class TodoService {
-  constructor(private firestore: Firestore) {}
+	constructor(private firestore: Firestore, private authService: AuthService) {}
 
-  getUserLists(uuid: string) {
-    const userLists = collection(this.firestore, uuid);
-    return collectionData(userLists);
-  }
+	private userID = this.authService.user;
+	private userListRef = collection(this.firestore, this.userID!);
 
-  createGroup(groupName: string, uuid: string) {
-    const userLists = collection(this.firestore, uuid);
+	getTodoList(): Observable<TodoItem[]> {
+		return collectionData(this.userListRef) as Observable<TodoItem[]>;
+	}
 
-    return addDoc(userLists, { listName: groupName, items: [] });
-  }
+	addTodoItem(todoItem: TodoItem) {
+		return addDoc(this.userListRef, todoItem);
+	}
 
-  createTodoItem(item: { title: string; description: string }, todoList: any) {
-    //todo: implement document item array update with the new todo item
-  }
+	async finishTodoItem(todoItem: TodoItem) {
+		const todoItemReference = await this.getDocReference(todoItem);
+		todoItem.completed = true;
+		return updateDoc(todoItemReference, todoItem);
+	}
+
+	async deleteTodoItem(todoItem: TodoItem) {
+		const todoItemReference = await this.getDocReference(todoItem);
+		return deleteDoc(todoItemReference);
+	}
+
+	private async getDocReference(todoItem: TodoItem): Promise<any> {
+		const { createdAt, completed, title, description } = todoItem;
+		const _query = query(this.userListRef, where('title', '==', title), where('description', '==', description), where('createdAt', '==', createdAt), where('completed', '==', completed));
+
+		const querySnapshot = await getDocs(_query);
+		let docId = querySnapshot.docs[0].id;
+
+		return doc(this.firestore, this.userID!, docId);
+	}
 }
